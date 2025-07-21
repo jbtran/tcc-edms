@@ -13,7 +13,68 @@ from .links import (
     link_download_file_delete, link_download_file_download,
     link_download_file_list
 )
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
+from mayan.apps.common.classes import ModelCopy
+from mayan.apps.common.menus import menu_tools
+
+from .classes import DefinedStorage
+
+
+class StorageApp(AppConfig):
+    has_tests = True
+    name = 'mayan.apps.storage'
+    verbose_name = _('Storage')
+
+    def ready(self):
+        super().ready()
+
+        # Register Azure storage backends
+        from .backends.azure_backend import (
+            MayanDocumentAzureStorage,
+            MayanCacheAzureStorage,
+            MayanSharedUploadedFileAzureStorage
+        )
+
+        # Document file storage
+        DefinedStorage(
+            app_label='documents',
+            backend_class=MayanDocumentAzureStorage,
+            defined_storage_name='documents__documentfile',
+            label=_('Document file storage'),
+        )
+
+        # Cache storage
+        DefinedStorage(
+            app_label='file_caching',
+            backend_class=MayanCacheAzureStorage,
+            defined_storage_name='file_caching__cache',
+            label=_('File cache storage'),
+        )
+
+        # Shared upload storage
+        DefinedStorage(
+            app_label='storage',
+            backend_class=MayanSharedUploadedFileAzureStorage,
+            defined_storage_name='storage__shareduploadedfile',
+            label=_('Shared uploaded file storage'),
+        )
+
+        # Import existing storage configurations
+        from .links import link_download_file
+        from .tasks import task_shared_uploaded_file_delete
+
+        menu_tools.bind_links(
+            links=(link_download_file,),
+            sources=(
+                'storage:download_file_list',
+            )
+        )
+
+        ModelCopy(
+            bind_link=True, register_permission=True
+        ).add_to_model(model=self.get_model('DownloadFile'))
 
 class StorageApp(MayanAppConfig):
     app_namespace = 'storage'
