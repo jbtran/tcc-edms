@@ -12,16 +12,12 @@
 .vagrant
 _build/
 /build/
-docker/Dockerfile
 coverage.xml
-document_storage/
 gpg_home/
 htmlcov/
 mayan/media/
 mayan/media/document_cache/
-mayan/settings/local.py
 mayan/error.log
-settings_local.py
 static_collected/
 /celerybeat-schedule
 /fabfile_install
