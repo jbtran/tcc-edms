@@ -1,8 +1,7 @@
 version: '3.9'
 
-x-mayan-container:
-  &mayan-container
-  build: 
+x-mayan-container: &mayan-container
+  build:
     context: .
     dockerfile: Dockerfile
   env_file: .env
@@ -122,27 +121,27 @@ services:
       - ${MAYAN_REDIS_VOLUME:-redis}:/data
 
   # Run a frontend gunicorn container
-  frontend:
-    <<: *mayan-container
-    command:
-      - run_frontend
-    labels:
-      - "traefik.enable=false"
-      - "traefik.http.middlewares.mayan_redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.mayan_redirect.redirectscheme.permanent=false"
-      - "traefik.http.routers.mayan_frontend.rule=Host(`${MAYAN_TRAEFIK_EXTERNAL_DOMAIN}`)"
-      - "traefik.http.routers.mayan_frontend.entrypoints=http"
-      - "traefik.http.routers.mayan_frontend.middlewares=mayan_redirect"
-      - "traefik.http.routers.mayan_frontend_https.rule=Host(`${MAYAN_TRAEFIK_EXTERNAL_DOMAIN}`)"
-      - "traefik.http.routers.mayan_frontend_https.entrypoints=https"
-      - "traefik.http.routers.mayan_frontend_https.tls=true"
-      - "traefik.http.routers.mayan_frontend_https.tls.certresolver=letsencrypt"
-      - "traefik.http.services.mayan_frontend.loadbalancer.server.port=8000"
-    # Disable ports if using Traefik.
-    ports:
-      - "80:8000"
-    profiles:
-      - extra_frontend
+  # frontend:
+  #   <<: *mayan-container
+  #   command:
+  #     - run_frontend
+  #   labels:
+  #     - "traefik.enable=false"
+  #     - "traefik.http.middlewares.mayan_redirect.redirectscheme.scheme=https"
+  #     - "traefik.http.middlewares.mayan_redirect.redirectscheme.permanent=false"
+  #     - "traefik.http.routers.mayan_frontend.rule=Host(`${MAYAN_TRAEFIK_EXTERNAL_DOMAIN}`)"
+  #     - "traefik.http.routers.mayan_frontend.entrypoints=http"
+  #     - "traefik.http.routers.mayan_frontend.middlewares=mayan_redirect"
+  #     - "traefik.http.routers.mayan_frontend_https.rule=Host(`${MAYAN_TRAEFIK_EXTERNAL_DOMAIN}`)"
+  #     - "traefik.http.routers.mayan_frontend_https.entrypoints=https"
+  #     - "traefik.http.routers.mayan_frontend_https.tls=true"
+  #     - "traefik.http.routers.mayan_frontend_https.tls.certresolver=letsencrypt"
+  #     - "traefik.http.services.mayan_frontend.loadbalancer.server.port=8000"
+  #   # Disable ports if using Traefik.
+  #   ports:
+  #     - "80:8000"
+  #   profiles:
+  #     - extra_frontend
 
   # Enable to run standalone workers
   mountindex:
@@ -154,15 +153,15 @@ services:
     entrypoint:
       - /bin/sh
       - -c
-      - 'mkdir --parents /mnt/index && chown mayan:mayan /mnt/index && /usr/local/bin/entrypoint.sh run_command "mountindex --allow-other creation_date /mnt/index"'  # Replace "creation_date" with the index of your choice.
+      - 'mkdir --parents /mnt/index && chown mayan:mayan /mnt/index && /usr/local/bin/entrypoint.sh run_command "mountindex --allow-other creation_date /mnt/index"' # Replace "creation_date" with the index of your choice.
     profiles:
       - mountindex
     security_opt:
       - apparmor:unconfined
     volumes:
       - type: bind
-        source: /mnt/mayan_indexes/creation_date  # Host location where the index will show up.
-        target: /mnt/index  # Location inside the container where the index will be mounted. Must the same is in the "entrypoint" section.
+        source: /mnt/mayan_indexes/creation_date # Host location where the index will show up.
+        target: /mnt/index # Location inside the container where the index will be mounted. Must the same is in the "entrypoint" section.
         bind:
           propagation: shared
 
@@ -253,34 +252,33 @@ services:
     restart: unless-stopped
     volumes:
       - ${MAYAN_RABBITMQ_VOLUME:-rabbitmq}:/var/lib/rabbitmq
-
-  traefik:
-    container_name: "traefik"
-    command:
-      # - "--log.level=DEBUG"
-      - "--api.insecure=${MAYAN_TRAEFIK_API_INSECURE:-false}"
-      - "--certificatesresolvers.letsencrypt.acme.caserver=${MAYAN_TRAEFIK_LETS_ENCRYPT_SERVER:-https://acme-staging-v02.api.letsencrypt.org/directory}"
-      - "--certificatesresolvers.letsencrypt.acme.email=${MAYAN_TRAEFIK_LETS_ENCRYPT_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/traefik-certificates-letsencrypt/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=${MAYAN_TRAEFIK_LETS_ENCRYPT_TLS_CHALLENGE:-false}"
-      - "--entrypoints.http.address=:80"
-      - "--entrypoints.https.address=:443"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-    image: traefik:${MAYAN_DOCKER_TRAEFIK_TAG:-v2.5}
-    networks:
-      - mayan
-      - traefik
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-    profiles:
-      - traefik
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-certificates-letsencrypt:/traefik-certificates-letsencrypt
+    # traefik:
+    #   container_name: "traefik"
+    #   command:
+    #     # - "--log.level=DEBUG"
+    #     - "--api.insecure=${MAYAN_TRAEFIK_API_INSECURE:-false}"
+    #     - "--certificatesresolvers.letsencrypt.acme.caserver=${MAYAN_TRAEFIK_LETS_ENCRYPT_SERVER:-https://acme-staging-v02.api.letsencrypt.org/directory}"
+    #     - "--certificatesresolvers.letsencrypt.acme.email=${MAYAN_TRAEFIK_LETS_ENCRYPT_EMAIL}"
+    #     - "--certificatesresolvers.letsencrypt.acme.storage=/traefik-certificates-letsencrypt/acme.json"
+    #     - "--certificatesresolvers.letsencrypt.acme.tlschallenge=${MAYAN_TRAEFIK_LETS_ENCRYPT_TLS_CHALLENGE:-false}"
+    #     - "--entrypoints.http.address=:80"
+    #     - "--entrypoints.https.address=:443"
+    #     - "--providers.docker=true"
+    #     - "--providers.docker.exposedbydefault=false"
+    #   image: traefik:${MAYAN_DOCKER_TRAEFIK_TAG:-v2.5}
+    #   networks:
+    #     - mayan
+    #     - traefik
+    #   ports:
+    #     - "80:80"
+    #     - "443:443"
+    #     - "8080:8080"
+    #   profiles:
+    #     - traefik
+    # restart: unless-stopped
+    # volumes:
+    #  - /var/run/docker.sock:/var/run/docker.sock:ro
+    # - traefik-certificates-letsencrypt:/traefik-certificates-letsencrypt
 
 volumes:
   app:
@@ -289,4 +287,4 @@ volumes:
   mountindex:
   rabbitmq:
   redis:
-  traefik-certificates-letsencrypt:
+  #traefik-certificates-letsencrypt:
