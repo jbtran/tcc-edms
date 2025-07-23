@@ -2,7 +2,9 @@ version: '3.9'
 
 x-mayan-container:
   &mayan-container
-  build: .
+  build: 
+    context: .
+    dockerfile: Dockerfile
   env_file: .env
   environment:
     MAYAN_CELERY_BROKER_URL: amqp://${MAYAN_RABBITMQ_USER:-mayan}:${MAYAN_RABBITMQ_PASSWORD:-mayanrabbitpass}@rabbitmq:5672/${MAYAN_RABBITMQ_VHOST:-mayan}
