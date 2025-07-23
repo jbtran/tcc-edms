@@ -30,8 +30,8 @@ networks:
 services:
   app:
     <<: *mayan-container
-    profiles:
-      - all_in_one
+    #profiles:
+    #  - all_in_one
     # Disable ports if using Traefik.
     ports:
       - "8111:8000"
