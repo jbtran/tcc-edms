@@ -143,26 +143,26 @@ services:
   #     - extra_frontend
 
   # Enable to run standalone workers
-  mountindex:
-    <<: *mayan-container
-    cap_add:
-      - SYS_ADMIN
-    devices:
-      - "/dev/fuse:/dev/fuse"
-    entrypoint:
-      - /bin/sh
-      - -c
-      - 'mkdir --parents /mnt/index && chown mayan:mayan /mnt/index && /usr/local/bin/entrypoint.sh run_command "mountindex --allow-other creation_date /mnt/index"' # Replace "creation_date" with the index of your choice.
-    #profiles:
-     # - mountindex
-    security_opt:
-      - apparmor:unconfined
-    volumes:
-      - type: bind
-        source: /mnt/mayan_indexes/creation_date # Host location where the index will show up.
-        target: /mnt/index # Location inside the container where the index will be mounted. Must the same is in the "entrypoint" section.
-        bind:
-          propagation: shared
+  # mountindex:
+  #   <<: *mayan-container
+  #   cap_add:
+  #     - SYS_ADMIN
+  #   devices:
+  #     - "/dev/fuse:/dev/fuse"
+  #   entrypoint:
+  #     - /bin/sh
+  #     - -c
+  #     - 'mkdir --parents /mnt/index && chown mayan:mayan /mnt/index && /usr/local/bin/entrypoint.sh run_command "mountindex --allow-other creation_date /mnt/index"' # Replace "creation_date" with the index of your choice.
+  #   #profiles:
+  #    # - mountindex
+  #   security_opt:
+  #     - apparmor:unconfined
+  #   volumes:
+  #     - type: bind
+  #       source: /mnt/mayan_indexes/creation_date # Host location where the index will show up.
+  #       target: /mnt/index # Location inside the container where the index will be mounted. Must the same is in the "entrypoint" section.
+  #       bind:
+  #         propagation: shared
 
   # Run a separate class A worker
   worker_a:
@@ -285,7 +285,7 @@ volumes:
   app:
   elasticsearch:
   postgres:
-  mountindex:
+  # mountindex:
   rabbitmq:
   redis:
   #traefik-certificates-letsencrypt:
