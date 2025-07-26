@@ -285,7 +285,7 @@ volumes:
   app:
   elasticsearch:
   postgres:
-  mountindex:
+  #mountindex:
   rabbitmq:
   redis:
   #traefik-certificates-letsencrypt:
