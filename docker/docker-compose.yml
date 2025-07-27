@@ -114,7 +114,7 @@ services:
       - --requirepass
       - "${MAYAN_REDIS_PASSWORD:-mayanredispassword}"
     #image: redis:${MAYAN_DOCKER_REDIS_TAG:-6.2-alpine}
-    image: redis:6.2-alpine}
+    image: redis:6.2-alpine
     networks:
       - mayan
     #profiles:
@@ -236,7 +236,7 @@ services:
 
   rabbitmq:
     #image: rabbitmq:${MAYAN_DOCKER_RABBITMQ_TAG:-3.10-management-alpine}
-    image: rabbitmq:3.10-management-alpine}
+    image: rabbitmq:3.10-management-alpine
     environment:
       RABBITMQ_DEFAULT_USER: ${MAYAN_RABBITMQ_USER:-mayan}
       RABBITMQ_DEFAULT_PASS: ${MAYAN_RABBITMQ_PASSWORD:-mayanrabbitpass}
