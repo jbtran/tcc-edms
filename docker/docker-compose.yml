@@ -45,7 +45,8 @@ services:
       - xpack.security.enabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=${MAYAN_ELASTICSEARCH_PASSWORD:-mayanespassword}
-    image: ${MAYAN_DOCKER_ELASTICSEARCH_IMAGE:-docker.elastic.co/elasticsearch/elasticsearch}:${MAYAN_DOCKER_ELASTICSEARCH_TAG:-7.16.0}
+    #image: ${MAYAN_DOCKER_ELASTICSEARCH_IMAGE:-docker.elastic.co/elasticsearch/elasticsearch}:${MAYAN_DOCKER_ELASTICSEARCH_TAG:-7.16.0}
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.0
     networks:
       - mayan
     # Enable to allow external access to the database.
@@ -80,7 +81,8 @@ services:
       POSTGRES_DB: ${MAYAN_DATABASE_NAME:-mayan}
       POSTGRES_PASSWORD: ${MAYAN_DATABASE_PASSWORD:-mayandbpass}
       POSTGRES_USER: ${MAYAN_DATABASE_USER:-mayan}
-    image: postgres:${MAYAN_DOCKER_POSTGRES_TAG:-12.10-alpine}
+    #image: postgres:${MAYAN_DOCKER_POSTGRES_TAG:-12.10-alpine}
+    image: postgres:12.10-alpine
     networks:
       - mayan
     # Enable to allow external access to the database.
@@ -111,7 +113,8 @@ services:
       - "256"
       - --requirepass
       - "${MAYAN_REDIS_PASSWORD:-mayanredispassword}"
-    image: redis:${MAYAN_DOCKER_REDIS_TAG:-6.2-alpine}
+    #image: redis:${MAYAN_DOCKER_REDIS_TAG:-6.2-alpine}
+    image: redis:6.2-alpine}
     networks:
       - mayan
     #profiles:
@@ -232,7 +235,8 @@ services:
     restart: "no"
 
   rabbitmq:
-    image: rabbitmq:${MAYAN_DOCKER_RABBITMQ_TAG:-3.10-management-alpine}
+    #image: rabbitmq:${MAYAN_DOCKER_RABBITMQ_TAG:-3.10-management-alpine}
+    image: rabbitmq:3.10-management-alpine}
     environment:
       RABBITMQ_DEFAULT_USER: ${MAYAN_RABBITMQ_USER:-mayan}
       RABBITMQ_DEFAULT_PASS: ${MAYAN_RABBITMQ_PASSWORD:-mayanrabbitpass}
